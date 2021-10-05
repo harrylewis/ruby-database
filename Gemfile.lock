@@ -1,0 +1,16 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    btree (1.0.0)
+
+PLATFORMS
+  x86_64-darwin-19
+
+DEPENDENCIES
+  btree
+
+RUBY VERSION
+   ruby 2.6.6p146
+
+BUNDLED WITH
+   2.2.11

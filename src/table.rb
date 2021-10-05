@@ -2,11 +2,12 @@
 
 require 'benchmark'
 
-require 'pry'
+require 'btree'
 
 class Table
   def initialize(size: 10_000_000)
     @store = []
+    @index = nil
 
     benchmark = Benchmark.measure do
       (1..size).each do |id|
@@ -22,10 +23,18 @@ class Table
     result = nil
 
     benchmark = Benchmark.measure do
-      @store.each do |row|
-        if row[:id] == id
-          result = row
-          break
+      if @index.nil?
+        @store.each do |row|
+          if row[:id] == id
+            result = row
+            break
+          end
+        end
+      else
+        location = @index.value_of(id)
+
+        unless location.nil?
+          result = @store[location]
         end
       end
     end
@@ -34,6 +43,19 @@ class Table
     puts "Time: #{(benchmark.real * 1000.0).round(2)}ms"
 
     result
+  end
+
+  def create_index
+    benchmark = Benchmark.measure do
+      @index = Btree.create(5)
+
+      @store.each_with_index do |row, i|
+        @index.insert(row[:id], i)
+      end
+    end
+
+    puts "Index created"
+    puts "Time: #{(benchmark.real * 1000.0).round(2)}ms"
   end
 
   def inspect
