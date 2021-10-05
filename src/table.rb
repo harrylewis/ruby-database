@@ -45,6 +45,21 @@ class Table
     result
   end
 
+  def insert(id:)
+    row = { id: id }
+
+    benchmark = Benchmark.measure do
+      @store.push(row)
+
+      unless @index.nil?
+        @index.insert(id, @store.length - 1)
+      end
+    end
+
+    puts "Row inserted"
+    puts "Time: #{(benchmark.real * 1000.0).round(2)}ms"
+  end
+
   def create_index
     benchmark = Benchmark.measure do
       @index = Btree.create(5)
