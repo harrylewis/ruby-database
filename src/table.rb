@@ -58,6 +58,15 @@ class Table
     puts "Time: #{(benchmark.real * 1000.0).round(2)}ms"
   end
 
+  def delete_index
+    benchmark = Benchmark.measure do
+      @index = nil
+    end
+
+    puts "Index deleted"
+    puts "Time: #{(benchmark.real * 1000.0).round(2)}ms"
+  end
+
   def inspect
     "#<Table:#{"0x00%x" % object_id << 1} rows: #{@store.length}>"
   end
