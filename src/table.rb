@@ -5,14 +5,10 @@ require 'benchmark'
 require 'btree'
 
 class Table
-  def initialize(size: 10_000_000)
-    @store = []
-    @index = nil
-
+  def initialize
     benchmark do
-      (1..size).each do |id|
-        @store.push(id: id)
-      end
+      @store = []
+      @index = nil
 
       'Initialized'
     end
