@@ -9,20 +9,19 @@ class Table
     @store = []
     @index = nil
 
-    benchmark = Benchmark.measure do
+    benchmark do
       (1..size).each do |id|
         @store.push(id: id)
       end
-    end
 
-    puts "Initialized"
-    puts "Time: #{(benchmark.real * 1000.0).round(2)}ms"
+      'Initialized'
+    end
   end
 
   def where(id:)
     result = nil
 
-    benchmark = Benchmark.measure do
+    benchmark do
       if @index.nil?
         @store.each do |row|
           if row[:id] == id
@@ -37,52 +36,59 @@ class Table
           result = @store[location]
         end
       end
+
+      result
     end
-
-    puts (result.nil? ? {} : result)
-    puts "Time: #{(benchmark.real * 1000.0).round(2)}ms"
-
-    result
   end
 
   def insert(id:)
     row = { id: id }
 
-    benchmark = Benchmark.measure do
+    benchmark do
       @store.push(row)
 
       unless @index.nil?
         @index.insert(id, @store.length - 1)
       end
-    end
 
-    puts "Row inserted"
-    puts "Time: #{(benchmark.real * 1000.0).round(2)}ms"
+      'Row inserted'
+    end
   end
 
   def create_index
-    benchmark = Benchmark.measure do
+    benchmark do
       @index = Btree.create(5)
 
       @store.each_with_index do |row, i|
         @index.insert(row[:id], i)
       end
-    end
 
-    puts "Index created"
-    puts "Time: #{(benchmark.real * 1000.0).round(2)}ms"
+      'Index created'
+    end
   end
 
   def delete_index
-    benchmark = Benchmark.measure do
+    benchmark do
       @index = nil
-    end
 
-    puts "Index deleted"
-    puts "Time: #{(benchmark.real * 1000.0).round(2)}ms"
+      'Index deleted'
+    end
   end
 
   def inspect
     "#<Table:#{"0x00%x" % object_id << 1} rows: #{@store.length}>"
+  end
+
+  private
+
+  def benchmark(&block)
+    result = nil
+
+    benchmark = Benchmark.measure do
+      result = block.call
+    end
+
+    puts result
+    puts "Time: #{(benchmark.real * 1000.0).round(2)}ms"
   end
 end
