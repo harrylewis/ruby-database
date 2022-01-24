@@ -5,10 +5,14 @@ require 'benchmark'
 require 'btree'
 
 class Table
-  def initialize
+  # Creates a new database table described by `schema`.
+  #
+  # @param [Array] schema An array of symbols. Must contain `:id`.
+  def initialize(schema:)
     benchmark do
       @store = []
       @index = nil
+      @schema = schema
 
       'Initialized'
     end
@@ -37,14 +41,14 @@ class Table
     end
   end
 
-  def insert(id:)
-    row = { id: id }
+  def insert(row:)
+    row = @schema.map { |column| [column, row[column]] }.to_h
 
     benchmark do
       @store.push(row)
 
       unless @index.nil?
-        @index.insert(id, @store.length - 1)
+        @index.insert(row[:id], @store.length - 1)
       end
 
       'Row inserted'
