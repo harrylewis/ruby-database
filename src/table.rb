@@ -55,6 +55,14 @@ class Table
     end
   end
 
+  def insert_bulk(rows:)
+    benchmark do
+      rows.each { |row| _insert(row: row) }
+
+      'Rows inserted'
+    end
+  end
+
   def create_index(column:)
     benchmark do
       @indexes[column] = Btree.create(5)
