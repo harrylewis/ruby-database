@@ -16,24 +16,27 @@ class Table
       @index = nil
       @name = name
       @schema = schema
+      @indexes = {}
 
       'Initialized'
     end
   end
 
-  def where(id:)
+  def where(column:, value:)
     result = nil
 
     benchmark do
-      if @index.nil?
+      index = @indexes[column]
+
+      if index.nil?
         @store.each do |row|
-          if row[:id] == id
+          if row[column] == value
             result = row
             break
           end
         end
       else
-        location = @index.value_of(id)
+        location = index.value_of(value)
 
         unless location.nil?
           result = @store[location]
@@ -58,21 +61,21 @@ class Table
     end
   end
 
-  def create_index
+  def create_index(column:)
     benchmark do
-      @index = Btree.create(5)
+      @indexes[column] = Btree.create(5)
 
       @store.each_with_index do |row, i|
-        @index.insert(row[:id], i)
+        @indexes[column].insert(row[column], i)
       end
 
       'Index created'
     end
   end
 
-  def delete_index
+  def delete_index(column:)
     benchmark do
-      @index = nil
+      @indexes[column] = nil
 
       'Index deleted'
     end
