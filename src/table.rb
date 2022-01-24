@@ -53,8 +53,10 @@ class Table
 
       @store.push(row)
 
-      unless @index.nil?
-        @index.insert(row[:id], @store.length - 1)
+      @indexes.each do |column, index|
+        unless index.nil?
+          index.insert(row[column], @store.length - 1)
+        end
       end
 
       'Row inserted'
