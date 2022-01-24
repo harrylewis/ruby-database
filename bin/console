@@ -2,6 +2,7 @@
 
 require 'irb'
 
+require_relative '../src/database'
 require_relative '../src/table'
 
 IRB.start
