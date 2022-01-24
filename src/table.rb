@@ -23,9 +23,9 @@ class Table
   end
 
   def where(column:, value:)
-    result = nil
-
     benchmark do
+      result = nil
+
       index = @indexes[column]
 
       if index.nil?
@@ -48,9 +48,9 @@ class Table
   end
 
   def insert(row:)
-    row = @schema.map { |column| [column, row[column]] }.to_h
-
     benchmark do
+      row = @schema.map { |column| [column, row[column]] }.to_h
+
       @store.push(row)
 
       unless @index.nil?
