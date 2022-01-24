@@ -49,15 +49,7 @@ class Table
 
   def insert(row:)
     benchmark do
-      row = @schema.map { |column| [column, row[column]] }.to_h
-
-      @store.push(row)
-
-      @indexes.each do |column, index|
-        unless index.nil?
-          index.insert(row[column], @store.length - 1)
-        end
-      end
+      _insert(row: row)
 
       'Row inserted'
     end
@@ -88,6 +80,18 @@ class Table
   end
 
   private
+
+  def _insert(row:)
+    row = @schema.map { |column| [column, row[column]] }.to_h
+
+    @store.push(row)
+
+    @indexes.each do |column, index|
+      unless index.nil?
+        index.insert(row[column], @store.length - 1)
+      end
+    end
+  end
 
   def benchmark(&block)
     result = nil
