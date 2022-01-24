@@ -13,7 +13,6 @@ class Table
   def initialize(name:, schema:)
     benchmark do
       @store = []
-      @index = nil
       @name = name
       @schema = schema
       @indexes = {}
