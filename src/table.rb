@@ -46,16 +46,10 @@ class Table
     end
   end
 
-  def insert(row:)
+  def insert(rows:)
     benchmark do
-      _insert(row: row)
+      rows = rows.class == Array ? rows : [rows]
 
-      'Row inserted'
-    end
-  end
-
-  def insert_bulk(rows:)
-    benchmark do
       rows.each { |row| _insert(row: row) }
 
       'Rows inserted'
