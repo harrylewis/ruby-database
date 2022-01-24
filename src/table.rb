@@ -5,13 +5,16 @@ require 'benchmark'
 require 'btree'
 
 class Table
+  attr_reader :name
+
   # Creates a new database table described by `schema`.
   #
   # @param [Array] schema An array of symbols. Must contain `:id`.
-  def initialize(schema:)
+  def initialize(name:, schema:)
     benchmark do
       @store = []
       @index = nil
+      @name = name
       @schema = schema
 
       'Initialized'
